@@ -1,5 +1,14 @@
 Applies Devel::PatchPerl and my additional patches to older Perl sources.
 
+Additional patches:
+
+- Suppress incompatible function pointer warnings in DB_File on macOS before Perl 5.10.1.
+- Avoid compound tokens split across macros by using `do { ... } while (0)` for statement macros.
+- Include `signal.h` without conditional guards on macOS for Perl 5.8.1 and 5.8.2.
+- Fix Configure's `malloc` and `free` type detection with C23 compilers.
+- Fix Storable function declarations for Perl 5.8.1 through 5.8.7.
+- Fix the POSIX signal handler type for Perl 5.8.8.
+
 # Install
 
 ```
