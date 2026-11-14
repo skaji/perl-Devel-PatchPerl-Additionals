@@ -25,6 +25,7 @@ my @received;
         Devel::PatchPerl::_patch_b64(encode_base64($changed));
     };
     local *Devel::PatchPerl::SKAJI::patchperl_db_file = sub {};
+    local *Devel::PatchPerl::SKAJI::patchperl_darwin_safe_putenv = sub {};
     local *Devel::PatchPerl::SKAJI::patchperl_fix_compound_token_split_by_macro = sub {};
     local *Devel::PatchPerl::SKAJI::patchperl_darwin_remove_include_guard = sub {};
     local *Devel::PatchPerl::SKAJI::patchperl_configure_malloc = sub {};

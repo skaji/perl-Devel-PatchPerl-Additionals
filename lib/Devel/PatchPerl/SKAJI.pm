@@ -25,6 +25,7 @@ sub patchperl ($class, $version_without_rc, $source = ".") {
     }
 
     $version_without_rc = version->parse($version_without_rc);
+    $class->patchperl_darwin_safe_putenv(source => $source, version => $version_without_rc);
     $class->patchperl_db_file(version => $version_without_rc);
     $class->patchperl_fix_compound_token_split_by_macro(version => $version_without_rc);
     $class->patchperl_darwin_remove_include_guard(version => $version_without_rc);
@@ -32,6 +33,32 @@ sub patchperl ($class, $version_without_rc, $source = ".") {
     $class->patchperl_storable(source => $source, version => $version_without_rc);
     $class->patchperl_posix(source => $source, version => $version_without_rc);
 
+}
+
+sub patchperl_darwin_safe_putenv ($class, %argv) {
+    return 1 unless $^O eq 'darwin';
+    return 1 unless v5.23.6 <= $argv{version} && $argv{version} <= v5.37.0;
+
+    my $file = "$argv{source}/hints/darwin.sh";
+    open my $in, '<', $file or die "Cannot read $file: $!";
+    my $content = do { local $/; <$in> };
+    close $in or die "Cannot close $file: $!";
+    return 1 if $content =~ /-DPERL_USE_SAFE_PUTENV\b/;
+
+    # https://github.com/bingos/devel-patchperl/issues/68
+    warn "patching $file\n";
+    open my $out, '>>', $file or die "Cannot append to $file: $!";
+    print {$out} <<'SHELL' or die "Cannot write $file: $!";
+
+cat >> config.over <<'EOOVER'
+if test "$d_unsetenv" = "$define" -a \
+    `expr "$ccflags" : '.*-DPERL_USE_SAFE_PUTENV'` -eq 0; then
+        ccflags="$ccflags -DPERL_USE_SAFE_PUTENV"
+fi
+EOOVER
+SHELL
+    close $out or die "Cannot close $file: $!";
+    return 1;
 }
 
 sub patchperl_configure_malloc ($class, %argv) {
