@@ -19,7 +19,29 @@ sub patchperl ($class, $version_without_rc, $source = ".") {
     $class->patchperl_db_file(version => $version_without_rc);
     $class->patchperl_fix_compound_token_split_by_macro(version => $version_without_rc);
     $class->patchperl_darwin_remove_include_guard(version => $version_without_rc);
+    $class->patchperl_configure_malloc(source => $source);
 
+}
+
+sub patchperl_configure_malloc ($class, %argv) {
+    my $file = "$argv{source}/Configure";
+    open my $in, "<", $file or die "Cannot read $file: $!";
+    my $mode = (stat $in)[2] // die "Cannot stat $file: $!";
+    my $content = do { local $/; <$in> };
+    close $in or die "Cannot close $file: $!";
+
+    # https://github.com/Perl/perl5/commit/e1ca9a418fa6b7d26fbb1931c9164141035262c3
+    my $changed = $content =~ s/(#ifdef TRY_MALLOC\n)void \*malloc\(\);/$1void *malloc(size_t);/;
+    $changed += $content =~ s/(#ifdef TRY_FREE\n)void free\(\);/$1void free(void *);/;
+    return 1 unless $changed;
+
+    warn "patching $file\n";
+    open my $out, ">", "$file.tmp" or die "Cannot write $file.tmp: $!";
+    print {$out} $content or die "Cannot write $file.tmp: $!";
+    close $out or die "Cannot close $file.tmp: $!";
+    chmod $mode & 07777, "$file.tmp" or die "Cannot chmod $file.tmp: $!";
+    rename "$file.tmp", $file or die "Cannot replace $file: $!";
+    return 1;
 }
 
 sub patchperl_db_file ($class, %argv) {
