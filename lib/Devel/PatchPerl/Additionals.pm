@@ -1,11 +1,11 @@
-package Devel::PatchPerl::SKAJI v0.0.1;
+package Devel::PatchPerl::Additionals v0.0.1;
 use v5.24;
 use warnings;
 use experimental qw(lexical_subs signatures);
 
 use Devel::PatchPerl;
-use Devel::PatchPerl::SKAJI::FixCompoundTokenSplitByMacro;
-use Devel::PatchPerl::SKAJI::DarwinRemoveIncludeGuard;
+use Devel::PatchPerl::Additionals::FixCompoundTokenSplitByMacro;
+use Devel::PatchPerl::Additionals::DarwinRemoveIncludeGuard;
 use MIME::Base64 qw(decode_base64 encode_base64);
 
 sub patchperl ($class, $version_without_rc, $source = ".") {
@@ -174,7 +174,7 @@ sub patchperl_fix_compound_token_split_by_macro ($class, %argv) {
     } else {
         return 1; # not supported
     }
-    my $patch = Devel::PatchPerl::SKAJI::FixCompoundTokenSplitByMacro->file($name);
+    my $patch = Devel::PatchPerl::Additionals::FixCompoundTokenSplitByMacro->file($name);
     Devel::PatchPerl::_patch($patch);
 }
 
@@ -182,7 +182,7 @@ sub patchperl_darwin_remove_include_guard ($class, %argv) {
     my $version = $argv{version};
     my $need_patch = $^O eq 'darwin' && (v5.8.1 <= $version && $version <= v5.8.2);
     return if !$need_patch;
-    my $patch = Devel::PatchPerl::SKAJI::DarwinRemoveIncludeGuard->file("patch");
+    my $patch = Devel::PatchPerl::Additionals::DarwinRemoveIncludeGuard->file("patch");
     Devel::PatchPerl::_patch($patch);
 }
 

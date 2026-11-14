@@ -1,5 +1,5 @@
 # https://github.com/skaji/Devel-PatchPerl-Plugin-Darwin-RemoveIncludeGuard/blob/main/lib/Devel/PatchPerl/Plugin/Darwin/RemoveIncludeGuard/Share.pm
-package Devel::PatchPerl::SKAJI::DarwinRemoveIncludeGuard;
+package Devel::PatchPerl::Additionals::DarwinRemoveIncludeGuard;
 use strict;
 use warnings;
 use MIME::Base64 ();

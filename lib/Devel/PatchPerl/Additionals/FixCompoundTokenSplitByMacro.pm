@@ -1,5 +1,5 @@
 # https://github.com/skaji/Devel-PatchPerl-Plugin-FixCompoundTokenSplitByMacro/blob/main/lib/Devel/PatchPerl/Plugin/FixCompoundTokenSplitByMacro/Share.pm
-package Devel::PatchPerl::SKAJI::FixCompoundTokenSplitByMacro;
+package Devel::PatchPerl::Additionals::FixCompoundTokenSplitByMacro;
 use strict;
 use warnings;
 use MIME::Base64 ();

@@ -2,7 +2,7 @@ use v5.24;
 use warnings;
 use Test::More;
 use MIME::Base64 qw(encode_base64 decode_base64);
-use Devel::PatchPerl::SKAJI;
+use Devel::PatchPerl::Additionals;
 
 my $original = <<'PATCH';
 --- mkppport.lst.org	2023-11-27 22:47:29.583961000 +0000
@@ -24,14 +24,14 @@ my @received;
         my $changed = $original =~ s/\+ext\/DB_File/\+ext\/Other/r;
         Devel::PatchPerl::_patch_b64(encode_base64($changed));
     };
-    local *Devel::PatchPerl::SKAJI::patchperl_db_file = sub {};
-    local *Devel::PatchPerl::SKAJI::patchperl_darwin_safe_putenv = sub {};
-    local *Devel::PatchPerl::SKAJI::patchperl_fix_compound_token_split_by_macro = sub {};
-    local *Devel::PatchPerl::SKAJI::patchperl_darwin_remove_include_guard = sub {};
-    local *Devel::PatchPerl::SKAJI::patchperl_configure_malloc = sub {};
-    local *Devel::PatchPerl::SKAJI::patchperl_storable = sub {};
-    local *Devel::PatchPerl::SKAJI::patchperl_posix = sub {};
-    Devel::PatchPerl::SKAJI->patchperl('5.10.0');
+    local *Devel::PatchPerl::Additionals::patchperl_db_file = sub {};
+    local *Devel::PatchPerl::Additionals::patchperl_darwin_safe_putenv = sub {};
+    local *Devel::PatchPerl::Additionals::patchperl_fix_compound_token_split_by_macro = sub {};
+    local *Devel::PatchPerl::Additionals::patchperl_darwin_remove_include_guard = sub {};
+    local *Devel::PatchPerl::Additionals::patchperl_configure_malloc = sub {};
+    local *Devel::PatchPerl::Additionals::patchperl_storable = sub {};
+    local *Devel::PatchPerl::Additionals::patchperl_posix = sub {};
+    Devel::PatchPerl::Additionals->patchperl('5.10.0');
     Devel::PatchPerl::_patch_b64(encode_base64($original));
 }
 

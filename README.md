@@ -1,4 +1,4 @@
-Applies Devel::PatchPerl and my additional patches to older Perl sources.
+Applies Devel::PatchPerl and some additional patches to older Perl sources.
 
 Additional patches:
 
@@ -14,7 +14,7 @@ Additional patches:
 # Install
 
 ```
-cpm install -g https://github.com/skaji/perl-Devel-PatchPerl-SKAJI.git
+cpm install -g https://github.com/skaji/perl-Devel-PatchPerl-Additionals.git
 ```
 
 # Usage
@@ -23,5 +23,5 @@ cpm install -g https://github.com/skaji/perl-Devel-PatchPerl-SKAJI.git
 curl -fsSL -O https://cpan.metacpan.org/authors/id/S/SH/SHAY/perl-5.24.4.tar.gz
 tar xf perl-5.24.4.tar.gz
 cd perl-5.24.4
-perl -MDevel::PatchPerl::SKAJI -E 'Devel::PatchPerl::SKAJI->patchperl("5.24.4", ".")'
+perl -MDevel::PatchPerl::Additionals -E 'Devel::PatchPerl::Additionals->patchperl("5.24.4", ".")'
 ```
