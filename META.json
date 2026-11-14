@@ -1,58 +1,17 @@
 {
-   "abstract" : "blah blah blah",
-   "author" : [
-      "Shoichi Kaji <skaji@cpan.org>"
-   ],
-   "dynamic_config" : 0,
-   "generated_by" : "CPAN::Meta version 2.150015",
-   "license" : [
-      "perl_5"
-   ],
-   "meta-spec" : {
-      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
-      "version" : 2
-   },
-   "name" : "Devel-PatchPerl-SKAJI",
-   "prereqs" : {
-      "configure" : {
-         "requires" : {
-            "Module::Build::Tiny" : "0.053"
-         }
-      },
-      "runtime" : {
-         "requires" : {
-            "Devel::PatchPerl" : "2.14",
-            "perl" : "v5.24.0"
-         }
+  "dynamic_config": 0,
+  "meta-spec": {
+    "version": 2
+  },
+  "name": "_",
+  "prereqs": {
+    "runtime": {
+      "requires": {
+        "Devel::PatchPerl": "2.14",
+        "perl": "v5.24.0"
       }
-   },
-   "provides" : {
-      "Devel::PatchPerl::SKAJI" : {
-         "file" : "lib/Devel/PatchPerl/SKAJI.pm",
-         "version" : "v0.0.1"
-      },
-      "Devel::PatchPerl::SKAJI::DarwinRemoveIncludeGuard" : {
-         "file" : "lib/Devel/PatchPerl/SKAJI/DarwinRemoveIncludeGuard.pm"
-      },
-      "Devel::PatchPerl::SKAJI::FixCompoundTokenSplitByMacro" : {
-         "file" : "lib/Devel/PatchPerl/SKAJI/FixCompoundTokenSplitByMacro.pm"
-      }
-   },
-   "release_status" : "stable",
-   "resources" : {
-      "bugtracker" : {
-         "web" : "https://github.com/skaji/perl-Devel-PatchPerl-SKAJI/issues"
-      },
-      "homepage" : "https://github.com/skaji/perl-Devel-PatchPerl-SKAJI",
-      "repository" : {
-         "type" : "git",
-         "url" : "https://github.com/skaji/perl-Devel-PatchPerl-SKAJI.git",
-         "web" : "https://github.com/skaji/perl-Devel-PatchPerl-SKAJI"
-      }
-   },
-   "version" : "v0.0.1",
-   "x_generated_by_perl" : "v5.44.0",
-   "x_serialization_backend" : "JSON::PP version 4.18",
-   "x_spdx_expression" : "Artistic-1.0-Perl OR GPL-1.0-or-later",
-   "x_static_install" : 1
+    }
+  },
+  "version": "1",
+  "x_static_install": 1
 }
