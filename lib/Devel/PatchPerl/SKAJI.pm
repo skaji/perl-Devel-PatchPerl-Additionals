@@ -6,10 +6,21 @@ use experimental qw(lexical_subs signatures);
 use Devel::PatchPerl;
 use Devel::PatchPerl::SKAJI::FixCompoundTokenSplitByMacro;
 use Devel::PatchPerl::SKAJI::DarwinRemoveIncludeGuard;
+use MIME::Base64 qw(decode_base64 encode_base64);
 
 sub patchperl ($class, $version_without_rc, $source = ".") {
     {
         delete local $ENV{PERL5_PATCHPERL_PLUGIN};
+        my $patch_b64 = \&Devel::PatchPerl::_patch_b64;
+        no warnings 'redefine';
+        local *Devel::PatchPerl::_patch_b64 = sub ($encoded) {
+            my $patch = decode_base64($encoded);
+            # https://github.com/bingos/devel-patchperl/issues/65
+            if ($patch =~ s{\A(--- mkppport\.lst\.org\t[^\n]*\n\+\+\+ mkppport\.lst\t[^\n]*\n)\@\@ -8,3 \+8,4 \@\@\n ext/IPC/SysV\n( ext/Time/HiRes\n ext/Win32API/File\n\+ext/DB_File\n)\z}{$1\@\@ -9,2 +9,3 \@\@\n$2}) {
+                $encoded = encode_base64($patch);
+            }
+            $patch_b64->($encoded);
+        };
         Devel::PatchPerl->patch_source($version_without_rc, $source);
     }
 
