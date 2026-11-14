@@ -21,6 +21,7 @@
       },
       "runtime" : {
          "requires" : {
+            "Devel::PatchPerl" : "2.14",
             "perl" : "v5.24.0"
          }
       }
