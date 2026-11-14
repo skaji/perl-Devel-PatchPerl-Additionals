@@ -1,9 +1,0 @@
-.gitattributes export-ignore
-.github/ export-ignore
-.gitignore export-ignore
-README.md export-ignore
-author/ export-ignore
-eg/ export-ignore
-example/ export-ignore
-maint/ export-ignore
-xt/ export-ignore
