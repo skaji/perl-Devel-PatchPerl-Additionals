@@ -20,6 +20,8 @@ sub patchperl ($class, $version_without_rc, $source = ".") {
     $class->patchperl_fix_compound_token_split_by_macro(version => $version_without_rc);
     $class->patchperl_darwin_remove_include_guard(version => $version_without_rc);
     $class->patchperl_configure_malloc(source => $source);
+    $class->patchperl_storable(source => $source, version => $version_without_rc);
+    $class->patchperl_posix(source => $source, version => $version_without_rc);
 
 }
 
@@ -33,6 +35,51 @@ sub patchperl_configure_malloc ($class, %argv) {
     # https://github.com/Perl/perl5/commit/e1ca9a418fa6b7d26fbb1931c9164141035262c3
     my $changed = $content =~ s/(#ifdef TRY_MALLOC\n)void \*malloc\(\);/$1void *malloc(size_t);/;
     $changed += $content =~ s/(#ifdef TRY_FREE\n)void free\(\);/$1void free(void *);/;
+    return 1 unless $changed;
+
+    warn "patching $file\n";
+    open my $out, ">", "$file.tmp" or die "Cannot write $file.tmp: $!";
+    print {$out} $content or die "Cannot write $file.tmp: $!";
+    close $out or die "Cannot close $file.tmp: $!";
+    chmod $mode & 07777, "$file.tmp" or die "Cannot chmod $file.tmp: $!";
+    rename "$file.tmp", $file or die "Cannot replace $file: $!";
+    return 1;
+}
+
+sub patchperl_storable ($class, %argv) {
+    return 1 unless v5.8.1 <= $argv{version} && $argv{version} <= v5.8.7;
+
+    my $file = "$argv{source}/ext/Storable/Storable.xs";
+    open my $in, "<", $file or die "Cannot read $file: $!";
+    my $mode = (stat $in)[2] // die "Cannot stat $file: $!";
+    my $content = do { local $/; <$in> };
+    close $in or die "Cannot close $file: $!";
+
+    my $changed = $content =~ s/static int store\(\);/static int store(stcxt_t *cxt, SV *sv);/;
+    my $context = $argv{version} >= v5.8.4 ? "pTHX_ " : "";
+    $changed += $content =~ s/SV \*\(\*\*retrieve_vtbl\)\(\);/SV *(**retrieve_vtbl)(${context}struct stcxt *, char *);/;
+    return 1 unless $changed;
+
+    warn "patching $file\n";
+    open my $out, ">", "$file.tmp" or die "Cannot write $file.tmp: $!";
+    print {$out} $content or die "Cannot write $file.tmp: $!";
+    close $out or die "Cannot close $file.tmp: $!";
+    chmod $mode & 07777, "$file.tmp" or die "Cannot chmod $file.tmp: $!";
+    rename "$file.tmp", $file or die "Cannot replace $file: $!";
+    return 1;
+}
+
+sub patchperl_posix ($class, %argv) {
+    return 1 unless $argv{version} == v5.8.8;
+
+    my $file = "$argv{source}/ext/POSIX/POSIX.xs";
+    open my $in, "<", $file or die "Cannot read $file: $!";
+    my $mode = (stat $in)[2] // die "Cannot stat $file: $!";
+    my $content = do { local $/; <$in> };
+    close $in or die "Cannot close $file: $!";
+
+    # Perl 5.8.9 uses the correct signal handler type.
+    my $changed = $content =~ s/(act\.sa_handler\s*=\s*DPTR2FPTR\(\s*void \(\*\))\(\)/$1(int)/;
     return 1 unless $changed;
 
     warn "patching $file\n";
